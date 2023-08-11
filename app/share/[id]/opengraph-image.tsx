@@ -1,7 +1,5 @@
 import { ImageResponse } from 'next/server'
 
-import { getSharedChat } from '@/app/actions'
-
 export const runtime = 'edge'
 
 export const alt = 'AI Chatbot'
@@ -28,10 +26,10 @@ interface ImageProps {
 }
 
 export default async function Image({ params }: ImageProps) {
-  const chat = await getSharedChat(params.id)
-
-  if (!chat || !chat?.sharePath) {
-    return null
+  const chat = {
+    title: 'Chat',
+    createdAt: new Date(),
+    messages: []
   }
 
   const textAlign = chat?.title?.length > 40 ? 'items-start' : 'items-center'
