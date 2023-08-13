@@ -88,6 +88,34 @@ function IconNextChat({
   )
 }
 
+function IconSystem({ className, ...props }: React.ComponentProps<'svg'>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className={cn('h-4 w-4', className)}
+    >
+      <title>System</title>
+      <rect x="4" y="4" width="16" height="16" rx="2" />
+      <rect x="9" y="9" width="6" height="6" />
+      <path d="M15 2v2" />
+      <path d="M15 20v2" />
+      <path d="M2 15h2" />
+      <path d="M2 9h2" />
+      <path d="M20 15h2" />
+      <path d="M20 9h2" />
+      <path d="M9 2v2" />
+      <path d="M9 20v2" />
+    </svg>
+  )
+}
+
 function IconFunction({ className, ...props }: React.ComponentProps<'svg'>) {
   return (
     <svg
@@ -501,6 +529,7 @@ function IconChevronUpDown({
 export {
   IconEdit,
   IconNextChat,
+  IconSystem,
   IconFunction,
   IconOpenAI,
   IconVercel,

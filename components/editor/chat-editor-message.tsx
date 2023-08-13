@@ -8,7 +8,7 @@ import { Message } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { CodeBlock } from '@/components/ui/codeblock'
 import { MemoizedReactMarkdown } from '@/components/markdown'
-import { IconFunction, IconOpenAI, IconUser } from '@/components/ui/icons'
+import { IconFunction, IconOpenAI, IconSystem, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from '@/components/editor/chat-editor-message-actions'
 
 export interface ChatEditorMessageProps {
@@ -36,6 +36,8 @@ export function ChatEditorMessage({
           <IconUser />
         ) : message.role === 'function' ? (
           <IconFunction />
+        ) : message.role === 'system' ? (
+          <IconSystem />
         ) : (
           <IconOpenAI />
         )}

@@ -3,8 +3,8 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 
 import { Message } from '@/lib/types'
-import { PromptForm } from '@/components/prompt-form'
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
+import { EditorForm } from './editor-form'
 
 export interface ChatEditorPanelProps {
   messages: Message[]
@@ -18,6 +18,7 @@ export function ChatEditorPanel({
   messages,
   setMessages,
 }: ChatEditorPanelProps) {
+  const [messageType, setMessageType] = useState('user')
   const [input, setInput] = useState('')
 
   return (
@@ -25,18 +26,20 @@ export function ChatEditorPanel({
       <ButtonScrollToBottom />
       <div className="mx-auto sm:max-w-2xl sm:px-4">
         <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
-          <PromptForm
-            onSubmit={async value => {
+          <EditorForm
+            onSubmit={async (value, messageType) => {
               setMessages((messages: Message[]) => {
                 return [
                   ...messages,
                   {
-                    role: 'user',
+                    role: messageType,
                     content: value,
                   } as Message
                 ]
               })
             }}
+            messageType={messageType}
+            setMessageType={setMessageType}
             input={input}
             setInput={setInput}
             isLoading={isLoading}
