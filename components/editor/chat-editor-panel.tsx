@@ -3,8 +3,10 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 
 import { Message } from '@/lib/types'
+import { Button } from '@/components/ui/button'
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
 import { EditorForm } from './editor-form'
+import { cn } from '@/lib/utils'
 
 export interface ChatEditorPanelProps {
   messages: Message[]
@@ -44,6 +46,10 @@ export function ChatEditorPanel({
             setInput={setInput}
             isLoading={isLoading}
           />
+          <div className={cn("flex flex-row space-x-4")}>
+            <Button>Save Conversation</Button>
+            <Button variant="outline" onClick={() => setMessages([])}>Reset</Button>
+          </div>
         </div>
       </div>
     </div>

@@ -63,7 +63,7 @@ export function EditorForm({
         <Tooltip>
           <TooltipTrigger asChild>
             <Select onValueChange={setMessageType} defaultValue={messageType}>
-              <SelectTrigger className="absolute left-0 top-4 h-8 w-[80px] bg-background p-0 sm:left-4">
+              <SelectTrigger className="absolute left-0 top-4 h-8 w-[120px] bg-background sm:left-4">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
@@ -85,7 +85,7 @@ export function EditorForm({
           onChange={e => setInput(e.target.value)}
           placeholder="Send a message."
           spellCheck={false}
-          className="min-h-[60px] w-full resize-none bg-transparent pl-[60px] pr-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
+          className="min-h-[60px] w-full resize-none bg-transparent pl-[100px] pr-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
         />
         <div className="absolute right-0 top-4 sm:right-4">
           <Tooltip>
