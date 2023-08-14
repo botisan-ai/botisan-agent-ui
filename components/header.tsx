@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Sidebar } from '@/components/sidebar'
-// import { SidebarList } from '@/components/sidebar-list'
+import { SidebarList } from '@/components/sidebar-list'
 import {
   IconGitHub,
   IconNextChat,
@@ -22,11 +22,10 @@ export async function Header() {
     <header className="sticky top-0 z-50 flex h-16 w-full shrink-0 items-center justify-between border-b bg-gradient-to-b from-background/10 via-background/50 to-background/80 px-4 backdrop-blur-xl">
       <div className="flex items-center">
         <Sidebar>
-          <div className="flex-1 overflow-auto" />
-          {/* <React.Suspense fallback={}> */}
+          <React.Suspense fallback={<div className="flex-1 overflow-auto" />}>
             {/* @ts-ignore */}
-            {/* <SidebarList userId={session?.user?.id} /> */}
-          {/* </React.Suspense> */}
+            <SidebarList />
+          </React.Suspense>
           <SidebarFooter>
             <ThemeToggle />
             {/* <ClearHistory clearChats={clearChats} /> */}

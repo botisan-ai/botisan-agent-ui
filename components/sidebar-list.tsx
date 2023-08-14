@@ -1,18 +1,19 @@
-import { SidebarActions } from '@/components/sidebar-actions'
-import { SidebarItem } from '@/components/sidebar-item'
+import { getAllConvos } from '@/app/actions'
 
 export interface SidebarListProps {
   userId?: string
 }
 
 export async function SidebarList({ userId }: SidebarListProps) {
-  // const chats = await getChats(userId)
+  const convos = await getAllConvos()
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="p-8 text-center">
-        <p className="text-sm text-muted-foreground">No chat history</p>
-      </div>
+      {convos.map(convo => (
+        <p key={convo} className="px-2 py-1 text-xs text-muted-foreground">
+          {convo.replace('convos/', '').replace('-data.json', '').split('-')[1]}
+        </p>
+      ))}
     </div>
   )
 }
