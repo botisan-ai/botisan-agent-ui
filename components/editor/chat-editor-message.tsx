@@ -1,6 +1,7 @@
 // Inspired by Chatbot-UI and modified to fit the needs of this project
 // @see https://github.com/mckaywrigley/chatbot-ui/blob/main/components/Chat/ChatMessage.tsx
 
+import { useState } from 'react'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 
@@ -8,8 +9,13 @@ import { Message } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { CodeBlock } from '@/components/ui/codeblock'
 import { MemoizedReactMarkdown } from '@/components/markdown'
-import { IconFunction, IconOpenAI, IconSystem, IconUser } from '@/components/ui/icons'
-import { ChatMessageActions } from '@/components/editor/chat-editor-message-actions'
+import {
+  IconFunction,
+  IconOpenAI,
+  IconSystem,
+  IconUser
+} from '@/components/ui/icons'
+import { ChatEditorMessageActions } from '@/components/editor/chat-editor-message-actions'
 
 export interface ChatEditorMessageProps {
   message: Message
@@ -19,6 +25,8 @@ export function ChatEditorMessage({
   message,
   ...props
 }: ChatEditorMessageProps) {
+  const [isEditing, setIsEditing] = useState(false);
+
   return (
     <div
       className={cn('group relative mb-4 flex items-start md:-ml-12')}
@@ -54,7 +62,7 @@ export function ChatEditorMessage({
               if (children.length) {
                 if (children[0] == '▍') {
                   return (
-                    <span className="mt-1 cursor-default animate-pulse">▍</span>
+                    <span className="mt-1 animate-pulse cursor-default">▍</span>
                   )
                 }
 
@@ -82,9 +90,26 @@ export function ChatEditorMessage({
             }
           }}
         >
-          {message.content}
+          {message.role === 'function'
+            ? `Function return for \`${
+                message.name
+              }\`:\n\`\`\`json\n${JSON.stringify(
+                JSON.parse(message.content),
+                null,
+                2
+              )}\n\`\`\``
+            : message.function_call
+            ? `**Invoke function call:**\n\`\`\`json\n${JSON.stringify(
+                {
+                  name: message.function_call.name,
+                  arguments: JSON.parse(message.function_call.arguments)
+                },
+                null,
+                2
+              )}\n\`\`\``
+            : message.content}
         </MemoizedReactMarkdown>
-        <ChatMessageActions message={message} />
+        <ChatEditorMessageActions message={message} />
       </div>
     </div>
   )

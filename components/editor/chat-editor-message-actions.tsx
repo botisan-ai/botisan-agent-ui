@@ -2,37 +2,37 @@
 
 import { Message } from '@/lib/types'
 import { Button } from '@/components/ui/button'
-import { IconCheck, IconCopy } from '@/components/ui/icons'
-import { useCopyToClipboard } from '@/lib/hooks/use-copy-to-clipboard'
+import { IconArrowElbow, IconEdit, IconNextChat } from '@/components/ui/icons'
 import { cn } from '@/lib/utils'
 
 interface ChatMessageActionsProps extends React.ComponentProps<'div'> {
   message: Message
 }
 
-export function ChatMessageActions({
+export function ChatEditorMessageActions({
   message,
   className,
   ...props
 }: ChatMessageActionsProps) {
-  const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 })
-
-  const onCopy = () => {
-    if (isCopied) return
-    copyToClipboard(message.content)
-  }
-
   return (
     <div
       className={cn(
-        'flex items-center justify-end transition-opacity group-hover:opacity-100 md:absolute md:-right-10 md:-top-2 md:opacity-0',
+        'flex md:flex-col items-center justify-end transition-opacity group-hover:opacity-100 md:absolute md:-right-10 md:-top-10 md:opacity-0',
         className
       )}
       {...props}
     >
-      <Button variant="ghost" size="icon" onClick={onCopy}>
-        {isCopied ? <IconCheck /> : <IconCopy />}
-        <span className="sr-only">Copy message</span>
+      <Button variant="ghost" size="icon" onClick={() => {}}>
+        <IconArrowElbow className="rotate-90 scale-y-100 md:rotate-0 md:-scale-y-100" />
+        <span className="sr-only">Insert above</span>
+      </Button>
+      <Button variant="ghost" size="icon" onClick={() => {}}>
+        <IconEdit />
+        <span className="sr-only">Edit message</span>
+      </Button>
+      <Button variant="ghost" size="icon" onClick={() => {}}>
+        <IconArrowElbow className="-rotate-90 md:rotate-0" />
+        <span className="sr-only">Insert below</span>
       </Button>
     </div>
   )

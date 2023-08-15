@@ -2,6 +2,10 @@ export interface Message {
   role: 'user' | 'assistant' | 'function' | 'system'
   name?: string
   content: string
+  function_call?: {
+    name: string;
+    arguments: string;
+  };
 }
 
 export interface Chat extends Record<string, any> {
