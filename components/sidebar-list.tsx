@@ -12,7 +12,7 @@ export async function SidebarList({ userId }: SidebarListProps) {
     <div className="flex-1 overflow-auto">
       {convos.map(convo => {
         const id = convo
-          .replace('convos/', '')
+          .replace('convos/dnc/', '')
           .replace('-data.json', '')
         return (
           <p key={convo} className="px-2 py-1 text-xs text-muted-foreground">
