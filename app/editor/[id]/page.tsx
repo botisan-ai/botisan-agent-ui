@@ -18,7 +18,5 @@ export default async function IndexPage({ params }: EditorPageProps) {
 
   const messages = await getMessagesFromConvo(id);
 
-  console.log(messages);
-
   return <ChatEditor id={params.id} initialMessages={messages} />
 }

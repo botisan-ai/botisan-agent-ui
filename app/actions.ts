@@ -24,3 +24,12 @@ export async function getMessagesFromConvo(id: string): Promise<Message[]> {
   const dataFile = await fs.readFile(`convos/dnc/${id}-data.json`, 'utf-8');
   return JSON.parse(dataFile).messagesHistory;
 }
+
+export async function saveMessagesIntoConvo(id: string, messages: Message[]): Promise<Message[]> {
+  const dataFile = await fs.readFile(`convos/dnc/${id}-data.json`, 'utf-8');
+  const data = JSON.parse(dataFile);
+  data.messagesHistory = messages;
+  await fs.writeFile(`convos/dnc/${id}-data.json`, JSON.stringify(data, null, 2));
+
+  return messages;
+}

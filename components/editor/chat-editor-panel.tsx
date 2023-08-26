@@ -13,12 +13,14 @@ export interface ChatEditorPanelProps {
   setMessages: Dispatch<SetStateAction<Message[]>>
   isLoading: boolean
   id?: string
+  saveConversation: () => void
 }
 
 export function ChatEditorPanel({
   isLoading,
   messages,
   setMessages,
+  saveConversation,
 }: ChatEditorPanelProps) {
   const [messageType, setMessageType] = useState('user')
   const [input, setInput] = useState('')
@@ -47,7 +49,7 @@ export function ChatEditorPanel({
             isLoading={isLoading}
           />
           <div className={cn("flex flex-row space-x-4")}>
-            <Button>Save Conversation</Button>
+            <Button onClick={saveConversation}>Save Conversation</Button>
             <Button variant="outline" onClick={() => setMessages([])}>Reset</Button>
           </div>
         </div>
