@@ -1,6 +1,7 @@
 'use server'
 
 import fs from 'fs/promises'
+import { existsSync } from 'fs';
 import { glob } from 'glob'
 
 import { Message } from '@/lib/types';
@@ -13,26 +14,33 @@ export async function getAllConvos(): Promise<string[]> {
 }
 
 export async function getMessagesFromConvo(id: string): Promise<Message[]> {
-  const file = await fs.readFile(`convos/${subfolder}/${id}.json`, 'utf-8');
-  const events = (JSON.parse(file) as any[]).map((event) => {
-    return {
-      value: event.value,
-      context: event.context,
-      event: event.event,
-    };
-  });
+  if (existsSync(`convos/${subfolder}/${id}.json`)) {
+    const file = await fs.readFile(`convos/${subfolder}/${id}.json`, 'utf-8');
+    const events = (JSON.parse(file) as any[]).map((event) => {
+      return {
+        value: event.value,
+        context: event.context,
+        event: event.event,
+      };
+    });
 
-  await fs.writeFile(`convos/${subfolder}/${id}-reduced.json`, JSON.stringify(events, null, 2));
+    await fs.writeFile(`convos/${subfolder}/${id}-reduced.json`, JSON.stringify(events, null, 2));
+  }
 
   const dataFile = await fs.readFile(`convos/${subfolder}/${id}-data.json`, 'utf-8');
+
   return JSON.parse(dataFile).messagesHistory;
 }
 
-export async function saveMessagesIntoConvo(id: string, messages: Message[]): Promise<Message[]> {
-  const dataFile = await fs.readFile(`convos/${subfolder}/${id}-data.json`, 'utf-8');
-  const data = JSON.parse(dataFile);
-  data.messagesHistory = messages;
+export async function saveMessagesIntoConvo(id: string, messagesHistory: Message[], functions: any[]): Promise<any> {
+  // const dataFile = await fs.readFile(`convos/${subfolder}/${id}-data.json`, 'utf-8');
+  // const data = JSON.parse(dataFile);
+  const data = {
+    messagesHistory,
+    functions,
+  };
+
   await fs.writeFile(`convos/${subfolder}/${id}-data.json`, JSON.stringify(data, null, 2));
 
-  return messages;
+  return data;
 }

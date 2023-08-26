@@ -1,49 +1,29 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai'
-import { Configuration, OpenAIApi } from 'openai-edge'
+import { NextResponse } from 'next/server'
+import { OpenAI } from 'openai'
 
 // import { nanoid } from '@/lib/utils'
 
 // export const runtime = 'edge'
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 })
 
-const openai = new OpenAIApi(configuration)
-
 export async function POST(req: Request) {
   const json = await req.json()
-  const { messages } = json
+  const { messages, functions, function_call } = json
 
-  const res = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    messages,
-    temperature: 0.7,
-    stream: true
-  })
-
-  const stream = OpenAIStream(res, {
-    // async onCompletion(completion) {
-    //   const title = json.messages[0].content.substring(0, 100)
-    //   const id = json.id ?? nanoid()
-    //   const createdAt = Date.now()
-    //   const path = `/chat/${id}`
-    //   const payload = {
-    //     id,
-    //     title,
-    //     createdAt,
-    //     path,
-    //     messages: [
-    //       ...messages,
-    //       {
-    //         content: completion,
-    //         role: 'assistant'
-    //       }
-    //     ]
-    //   }
-    //   console.log(payload);
-    // }
-  })
-
-  return new StreamingTextResponse(stream)
+  try {
+    const res = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages,
+      temperature: 0,
+      functions,
+      function_call
+    })
+    return NextResponse.json(res)
+  } catch (error: any) {
+    return NextResponse.json({ error: error.error.message.join('\n') }, { status: error.status })
+  }
 }

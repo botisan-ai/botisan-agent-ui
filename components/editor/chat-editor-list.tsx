@@ -28,6 +28,10 @@ export function ChatEditorList({ messages, setMessages }: ChatEditorListProps) {
     }
   }
 
+  function deleteMessage(index: number) {
+    setMessages([...messages.slice(0, index), ...messages.slice(index + 1)])
+  }
+
   function cancelInsert() {
     setMessages([...messages.filter(item => !item.isEdit)])
   }
@@ -40,6 +44,7 @@ export function ChatEditorList({ messages, setMessages }: ChatEditorListProps) {
             message={message}
             setMessage={(value) => setMessage(value, index)}
             insertMessage={(value) => insertMessage(value, index)}
+            deleteMessage={() => deleteMessage(index)}
             cancelInsert={cancelInsert}
           />
           {index < messages.length - 1 && (
