@@ -6,6 +6,7 @@ export interface Message {
     name: string;
     arguments: string;
   };
+  isEdit?: boolean
 }
 
 export interface Chat extends Record<string, any> {

@@ -15,11 +15,33 @@ export function ChatEditorList({ messages, setMessages }: ChatEditorListProps) {
     return null
   }
 
+  function setMessage(value: Message, index: number) {
+    setMessages([...messages.slice(0, index), value, ...messages.slice(index + 1)])
+  }
+
+  function insertMessage(type: string, index: number) {
+    if (type === 'before') {
+      setMessages([...messages.slice(0, index), { role: 'user', content: '', isEdit: true }, ...messages.slice(index)])
+    }
+    if (type === 'after') {
+      setMessages([...messages.slice(0, index + 1), { role: 'user', content: '', isEdit: true }, ...messages.slice(index + 1)])
+    }
+  }
+
+  function cancelInsert() {
+    setMessages([...messages.filter(item => !item.isEdit)])
+  }
+
   return (
     <div className="relative mx-auto max-w-2xl px-4">
       {messages.map((message, index) => (
         <div key={index}>
-          <ChatEditorMessage message={message} />
+          <ChatEditorMessage
+            message={message}
+            setMessage={(value) => setMessage(value, index)}
+            insertMessage={(value) => insertMessage(value, index)}
+            cancelInsert={cancelInsert}
+          />
           {index < messages.length - 1 && (
             <Separator className="my-4 md:my-8" />
           )}
