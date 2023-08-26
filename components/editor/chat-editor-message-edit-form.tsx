@@ -19,11 +19,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 export interface ChatEditorMessageEditFormProps {
   message: Message
   setIsEditing: (param: any) => void
   saveMessage: (param: Message) => void
+  deleteMessage: () => void
   cancelInsert: () => void
 }
 
@@ -31,6 +33,7 @@ export function ChatEditorMessageEditForm({
   message,
   setIsEditing,
   saveMessage,
+  deleteMessage,
   cancelInsert
 }: ChatEditorMessageEditFormProps) {
   const [editRole, setEditRole] = useState<any>(message.role)
@@ -53,6 +56,8 @@ export function ChatEditorMessageEditForm({
   const [editorMarkers, setEditorMarkers] = useState<any[]>([])
 
   const editorOptions: EditorProps['options'] = {
+    tabSize: 2,
+    insertSpaces: true,
     minimap: {
       enabled: false
     },
@@ -112,44 +117,41 @@ export function ChatEditorMessageEditForm({
   }
 
   return (
-    <div className="flex w-full flex-col pl-12">
-      <div className="mb-5 flex w-full flex-col justify-between">
-        <p className="mb-2">Role:</p>
-        <Select value={editRole} onValueChange={value => setEditRole(value)}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="user">User</SelectItem>
-              <SelectItem value="assistant">Assistant</SelectItem>
-              <SelectItem value="function">Function</SelectItem>
-              <SelectItem value="system">System</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="ml-12 flex w-full flex-col space-y-6">
+      <Label htmlFor="role">Role:</Label>
+      <Select value={editRole} onValueChange={value => setEditRole(value)}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select role" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="user">User</SelectItem>
+            <SelectItem value="assistant">Assistant</SelectItem>
+            <SelectItem value="function">Function</SelectItem>
+            <SelectItem value="system">System</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
 
       {['user', 'system'].includes(editRole) && (
-        <div className="mb-5">
+        <>
+          <Label htmlFor="role">Content:</Label>
           <Textarea
             value={editContent}
             onChange={ev => setEditContent(ev.target.value)}
           />
-        </div>
+        </>
       )}
 
       {editRole === 'assistant' && (
-        <div className="mb-5">
-          <div className="mb-5 flex">
-            <label htmlFor="function-call" style={{ paddingRight: 15 }}>
-              Function Call
-            </label>
+        <>
+          <div className="mb-5 flex items-center space-x-2">
             <Switch
               checked={editWithFunctionCall}
               onCheckedChange={value => setWithFunctionCall(value)}
-              id="function-call"
+              name="function-call"
             />
+            <Label htmlFor="function-call">Function call</Label>
           </div>
 
           {editWithFunctionCall && (
@@ -164,10 +166,8 @@ export function ChatEditorMessageEditForm({
                 editor.addAction({
                   id: 'save',
                   label: 'Save',
-                  keybindings: [
-                    monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
-                  ],
-                  run: saveEdit,
+                  keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+                  run: saveEdit
                 })
                 monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
                   validate: true,
@@ -186,10 +186,10 @@ export function ChatEditorMessageEditForm({
                             type: 'object'
                           }
                         },
-                        required: ['name', 'arguments'],
-                      },
+                        required: ['name', 'arguments']
+                      }
                     }
-                  ],
+                  ]
                 })
               }}
               onValidate={setEditorMarkers}
@@ -198,69 +198,63 @@ export function ChatEditorMessageEditForm({
           )}
 
           {!editWithFunctionCall && (
-            <Textarea
-              value={editContent}
-              onChange={ev => setEditContent(ev.target.value)}
-            />
+            <>
+              <Label htmlFor="role">Content:</Label>
+              <Textarea
+                value={editContent}
+                onChange={ev => setEditContent(ev.target.value)}
+              />
+            </>
           )}
-        </div>
+        </>
       )}
 
       {['function'].includes(editRole) && (
-        <div className="mb-5">
-          <div className="mb-5">
-            <div className="mb-5 flex w-full flex-col justify-between">
-              <p className="mb-2">Name:</p>
-              <Input
-                value={editName}
-                onChange={ev => setEditName(ev.target.value)}
-              />
-            </div>
-
-            <div className="py-3">
-              <Editor
-                height="150px"
-                theme="vs-dark"
-                defaultLanguage="json"
-                options={editorOptions}
-                defaultPath="function-call-return.json"
-                defaultValue={JSON.stringify(editFunctionContent, null, 2)}
-                onMount={(editor, monaco) => {
-                  editor.addAction({
-                    id: 'save',
-                    label: 'Save',
-                    keybindings: [
-                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
-                    ],
-                    run: saveEdit,
-                  })
-                  monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-                    validate: true,
-                    schemaValidation: 'error',
-                    schemas: [
-                      {
-                        uri: 'https://dummy.json.schema/function-call-return',
-                        fileMatch: ['function-call-return.json'],
-                        schema: {
-                          type: 'object',
-                        },
-                      }
-                    ],
-                  })
-                }}
-                onValidate={setEditorMarkers}
-                onChange={(value, ev) =>
-                  setEditFunctionContent(JSON.parse(value!))
-                }
-              />
-            </div>
-          </div>
-        </div>
+        <>
+          <Label htmlFor="name">Function Name:</Label>
+          <Input
+            value={editName}
+            onChange={ev => setEditName(ev.target.value)}
+          />
+          <Label htmlFor="content">Function Return:</Label>
+          <Editor
+            height="150px"
+            theme="vs-dark"
+            defaultLanguage="json"
+            options={editorOptions}
+            defaultPath="function-call-return.json"
+            defaultValue={JSON.stringify(editFunctionContent, null, 2)}
+            onMount={(editor, monaco) => {
+              editor.addAction({
+                id: 'save',
+                label: 'Save',
+                keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+                run: saveEdit
+              })
+              monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+                validate: true,
+                schemaValidation: 'error',
+                schemas: [
+                  {
+                    uri: 'https://dummy.json.schema/function-call-return',
+                    fileMatch: ['function-call-return.json'],
+                    schema: {
+                      type: 'object'
+                    }
+                  }
+                ]
+              })
+            }}
+            onValidate={setEditorMarkers}
+            onChange={(value, ev) => setEditFunctionContent(JSON.parse(value!))}
+          />
+        </>
       )}
 
-      <div className="flex justify-center">
-        <Button className="mr-5" onClick={saveEdit}>
-          Save
+      <div className="flex justify-center space-x-4">
+        <Button onClick={saveEdit}>Save</Button>
+        <Button variant="destructive" onClick={deleteMessage}>
+          Delete
         </Button>
         <Button variant="outline" onClick={cancelEdit}>
           Cancel

@@ -12,6 +12,7 @@ export interface ChatEditorMessageProps {
   message: Message
   setMessage: (param: Message) => void
   insertMessage: (type: string) => void
+  deleteMessage: () => void
   cancelInsert: () => void
 }
 
@@ -19,6 +20,7 @@ export function ChatEditorMessage({
   message,
   setMessage,
   insertMessage,
+  deleteMessage,
   cancelInsert,
   ...props
 }: ChatEditorMessageProps) {
@@ -33,6 +35,11 @@ export function ChatEditorMessage({
     setMessage(value)
   }
 
+  function removeMessage() {
+    deleteMessage()
+    setIsEditing(false)
+  }
+
   return (
     <div
       className={cn('group relative mb-4 flex items-start md:-ml-12')}
@@ -42,6 +49,7 @@ export function ChatEditorMessage({
         <ChatEditorMessageEditForm
           message={message}
           saveMessage={saveMessage}
+          deleteMessage={removeMessage}
           setIsEditing={setIsEditing}
           cancelInsert={cancelInsert}
         />
