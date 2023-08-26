@@ -152,6 +152,7 @@ export function ChatEditorMessageEdit({
               theme="vs-dark"
               defaultLanguage="json"
               options={editorOptions}
+              defaultPath="function-call.json"
               defaultValue={JSON.stringify(editFunctionCall, null, 2)}
               onMount={(editor, monaco) => {
                 monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
@@ -160,7 +161,7 @@ export function ChatEditorMessageEdit({
                   schemas: [
                     {
                       uri: 'https://dummy.json.schema/function-call',
-                      fileMatch: ['*'],
+                      fileMatch: ['function-call.json'],
                       schema: {
                         type: 'object',
                         properties: {
@@ -207,6 +208,7 @@ export function ChatEditorMessageEdit({
                 theme="vs-dark"
                 defaultLanguage="json"
                 options={editorOptions}
+                defaultPath="function-call-return.json"
                 defaultValue={JSON.stringify(editFunctionContent, null, 2)}
                 onMount={(editor, monaco) => {
                   monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
@@ -215,7 +217,7 @@ export function ChatEditorMessageEdit({
                     schemas: [
                       {
                         uri: 'https://dummy.json.schema/function-call-return',
-                        fileMatch: ['*'],
+                        fileMatch: ['function-call-return.json'],
                         schema: {
                           type: 'object',
                         },
