@@ -3,8 +3,8 @@
 'use client'
 
 import { useState } from 'react'
-
-import Editor, { EditorProps, type Monaco } from '@monaco-editor/react'
+import { toast } from 'react-hot-toast'
+import Editor, { EditorProps } from '@monaco-editor/react'
 
 import { Message } from '@/lib/types'
 import {
@@ -20,19 +20,19 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 
-export interface ChatEditorMessageProps {
+export interface ChatEditorMessageEditFormProps {
   message: Message
   setIsEditing: (param: any) => void
   saveMessage: (param: Message) => void
   cancelInsert: () => void
 }
 
-export function ChatEditorMessageEdit({
+export function ChatEditorMessageEditForm({
   message,
   setIsEditing,
   saveMessage,
   cancelInsert
-}: ChatEditorMessageProps) {
+}: ChatEditorMessageEditFormProps) {
   const [editRole, setEditRole] = useState<any>(message.role)
   const [editName, setEditName] = useState(message.name)
   const [editContent, setEditContent] = useState(message.content)
@@ -50,6 +50,7 @@ export function ChatEditorMessageEdit({
         }
       : { name: '', arguments: {} }
   )
+  const [editorMarkers, setEditorMarkers] = useState<any[]>([])
 
   const editorOptions: EditorProps['options'] = {
     minimap: {
@@ -88,6 +89,11 @@ export function ChatEditorMessageEdit({
   }
 
   function saveEdit() {
+    if (editorMarkers.length > 0) {
+      toast.error('Please fix the errors in the editor')
+      return
+    }
+
     saveMessage({
       role: editRole,
       name: editName,
@@ -155,6 +161,14 @@ export function ChatEditorMessageEdit({
               defaultPath="function-call.json"
               defaultValue={JSON.stringify(editFunctionCall, null, 2)}
               onMount={(editor, monaco) => {
+                editor.addAction({
+                  id: 'save',
+                  label: 'Save',
+                  keybindings: [
+                    monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+                  ],
+                  run: saveEdit,
+                })
                 monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
                   validate: true,
                   schemaValidation: 'error',
@@ -178,6 +192,7 @@ export function ChatEditorMessageEdit({
                   ],
                 })
               }}
+              onValidate={setEditorMarkers}
               onChange={(value, ev) => setEditFunctionCall(JSON.parse(value!))}
             />
           )}
@@ -211,6 +226,14 @@ export function ChatEditorMessageEdit({
                 defaultPath="function-call-return.json"
                 defaultValue={JSON.stringify(editFunctionContent, null, 2)}
                 onMount={(editor, monaco) => {
+                  editor.addAction({
+                    id: 'save',
+                    label: 'Save',
+                    keybindings: [
+                      monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+                    ],
+                    run: saveEdit,
+                  })
                   monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
                     validate: true,
                     schemaValidation: 'error',
@@ -225,6 +248,7 @@ export function ChatEditorMessageEdit({
                     ],
                   })
                 }}
+                onValidate={setEditorMarkers}
                 onChange={(value, ev) =>
                   setEditFunctionContent(JSON.parse(value!))
                 }
@@ -238,7 +262,7 @@ export function ChatEditorMessageEdit({
         <Button className="mr-5" onClick={saveEdit}>
           Save
         </Button>
-        <Button variant="destructive" onClick={cancelEdit}>
+        <Button variant="outline" onClick={cancelEdit}>
           Cancel
         </Button>
       </div>

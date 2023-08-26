@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Message } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { ChatEditorMessageView } from '@/components/editor/chat-editor-message-view'
-import { ChatEditorMessageEdit } from '@/components/editor/chat-editor-message-edit'
+import { ChatEditorMessageEditForm } from '@/components/editor/chat-editor-message-edit-form'
 
 export interface ChatEditorMessageProps {
   message: Message
@@ -27,7 +27,7 @@ export function ChatEditorMessage({
   function saveMessage(value: Message) {
     if (value.role === 'assistant' && value.function_call) {
       // @ts-ignore
-      delete value.content
+      value.content = null;
     }
 
     setMessage(value)
@@ -39,7 +39,7 @@ export function ChatEditorMessage({
       {...props}
     >
       {message.isEdit || isEditing ? (
-        <ChatEditorMessageEdit
+        <ChatEditorMessageEditForm
           message={message}
           saveMessage={saveMessage}
           setIsEditing={setIsEditing}

@@ -1,4 +1,3 @@
-import { UseChatHelpers } from 'ai/react'
 import { Dispatch, SetStateAction, useRef, useEffect } from 'react'
 import Textarea from 'react-textarea-autosize'
 
@@ -85,7 +84,7 @@ export function EditorForm({
           onChange={e => setInput(e.target.value)}
           placeholder="Send a message."
           spellCheck={false}
-          className="min-h-[60px] w-full resize-none bg-transparent pl-[100px] pr-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
+          className="min-h-[60px] w-full resize-none bg-transparent py-[1.3rem] pl-[100px] pr-4 focus-within:outline-none sm:text-sm"
         />
         <div className="absolute right-0 top-4 sm:right-4">
           <Tooltip>

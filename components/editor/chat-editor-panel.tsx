@@ -1,6 +1,7 @@
 'use client'
 
 import { Dispatch, SetStateAction, useState } from 'react'
+import { toast } from 'react-hot-toast'
 
 import { Message } from '@/lib/types'
 import { Button } from '@/components/ui/button'
