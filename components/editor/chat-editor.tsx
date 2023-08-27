@@ -41,10 +41,11 @@ export function ChatEditor({
       const newId = nanoid()
       await saveMessagesIntoConvo(newId, messages, functions)
       router.push(`/editor/${newId}`)
+    } else {
+      await saveMessagesIntoConvo(id!, messages, functions)
+      router.push('/')
+      // router.push(`/editor/${id}`)
     }
-
-    await saveMessagesIntoConvo(id!, messages, functions)
-    router.push(`/editor/${id}`)
 
     toast.success('save success')
   }

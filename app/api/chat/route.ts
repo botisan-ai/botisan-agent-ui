@@ -24,6 +24,7 @@ export async function POST(req: Request) {
     })
     return NextResponse.json(res)
   } catch (error: any) {
-    return NextResponse.json({ error: error.error.message.join('\n') }, { status: error.status })
+    console.log(error)
+    return NextResponse.json({ error: JSON.stringify(error.error) }, { status: error.status })
   }
 }

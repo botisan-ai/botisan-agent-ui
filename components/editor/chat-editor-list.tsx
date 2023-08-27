@@ -48,7 +48,7 @@ export function ChatEditorList({ messages, setMessages }: ChatEditorListProps) {
             cancelInsert={cancelInsert}
           />
           {index < messages.length - 1 && (
-            <Separator className="my-4 md:my-8" />
+            <Separator className="my-4 md:my-11" />
           )}
         </div>
       ))}

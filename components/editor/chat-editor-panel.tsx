@@ -2,7 +2,8 @@
 
 import { Dispatch, SetStateAction, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import Editor, { EditorProps } from '@monaco-editor/react'
+import Editor from '@monaco-editor/react'
+import { ChevronUp, ChevronDown } from 'lucide-react'
 
 import { Message } from '@/lib/types'
 import { cn, fetcher } from '@/lib/utils'
@@ -25,6 +26,7 @@ export function ChatEditorPanel({
 }: ChatEditorPanelProps) {
   const [messageType, setMessageType] = useState('user')
   const [useFunctionCall, setUseFunctionCall] = useState(false)
+  const [showFunctionCallSetting, setShowFunctionCallSetting] = useState(false)
   const [editorMarkers, setEditorMarkers] = useState<any[]>([])
   const [functionCallSetting, setFunctionCallSetting] = useState({
     functions: [],
@@ -67,7 +69,7 @@ export function ChatEditorPanel({
       <ButtonScrollToBottom />
       <div className="mx-auto sm:max-w-2xl sm:px-4">
         <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
-          {useFunctionCall && (
+          {showFunctionCallSetting && (
             <Editor
               height="300px"
               theme="vs-dark"
@@ -116,7 +118,7 @@ export function ChatEditorPanel({
               }
             />
           )}
-          <div className={cn('flex flex-row items-center space-x-4')}>
+          <div className={cn('flex flex-row items-center justify-between')}>
             <Button
               onClick={() =>
                 saveConversation(useFunctionCall, functionCallSetting.functions)
@@ -140,12 +142,29 @@ export function ChatEditorPanel({
             >
               Reset
             </Button>
-            <Switch
-              checked={useFunctionCall}
-              onCheckedChange={value => setUseFunctionCall(value)}
-              name="use-function-call"
-            ></Switch>
-            <Label htmlFor="use-function-call">Use Function Call</Label>
+            <div className="flex flex-row items-center space-x-2">
+              <Switch
+                checked={useFunctionCall}
+                onCheckedChange={value => setUseFunctionCall(value)}
+                name="use-function-call"
+              ></Switch>
+              <Label htmlFor="use-function-call">Use Function Call</Label>
+            </div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() =>
+                setShowFunctionCallSetting(
+                  showFunctionCallSetting => !showFunctionCallSetting
+                )
+              }
+            >
+              {showFunctionCallSetting ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronUp className="h-4 w-4" />
+              )}
+            </Button>
           </div>
         </div>
       </div>
